@@ -50,7 +50,7 @@ export class AttachmentFiles extends SharePointQueryableCollection {
     }
 
     /**
-     * Adds mjultiple new attachment to the collection. Not supported for batching.
+     * Adds multiple new attachment to the collection. Not supported for batching.
      *
      * @files name The collection of files to add
      */
@@ -59,6 +59,22 @@ export class AttachmentFiles extends SharePointQueryableCollection {
         // add the files in series so we don't get update conflicts
         return files.reduce((chain, file) => chain.then(() => this.clone(AttachmentFiles, `add(FileName='${file.name}')`, false).postCore({
             body: file.content,
+        })), Promise.resolve());
+    }
+
+    /**
+     * Delete multiple attachments from the collection. Not supported for batching.
+     *
+     * @files name The collection of files to delete
+     */
+    public deleteMultiple(files: AttachmentFileInfo[], eTag = "*"): Promise<void> {
+
+        // delete the files in series so we don't get update conflicts
+        return files.reduce((chain, file) => chain.then(() => this.clone(AttachmentFiles, `getByFileName('${file.name}')`).postCore({
+            headers: {
+                "IF-Match": eTag,
+                "X-HTTP-Method": "DELETE",
+            },
         })), Promise.resolve());
     }
 }
