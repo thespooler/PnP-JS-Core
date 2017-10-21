@@ -67,10 +67,8 @@ export class AttachmentFiles extends SharePointQueryableCollection {
      *
      * @files name The collection of files to delete
      */
-    public deleteMultiple(files: AttachmentFileInfo[]): Promise<void> {
-
-        // delete the files in series so we don't get update conflicts
-        return files.reduce((chain, file) => chain.then(() => this.clone(AttachmentFiles, `getByFileName('${file.name}')`).postCore({
+    public deleteMultiple(files: string[]): Promise<void> {
+        return files.reduce((chain, file) => chain.then(() => this.clone(AttachmentFiles, `getByFileName('${file}')`).postCore({
             headers: {
                 "X-HTTP-Method": "DELETE",
             },
