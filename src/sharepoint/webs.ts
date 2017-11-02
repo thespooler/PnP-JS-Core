@@ -465,7 +465,7 @@ export class Web extends SharePointQueryableShareableWeb {
      * @param key 
      */
     public getStorageEntity(key: string): Promise<string> {
-        return this.clone(Web, `GetStorageEntity('${key}')`).get();
+       return this.clone(Web, `getStorageEntity('${key}')`).get();
     }
 }
 
