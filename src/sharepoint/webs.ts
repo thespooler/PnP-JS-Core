@@ -19,6 +19,33 @@ import { Features } from "./features";
 import { SharePointQueryableShareableWeb } from "./sharepointqueryableshareable";
 import { RelatedItemManger, RelatedItemManagerImpl } from "./relateditems";
 
+export enum AppOperation {
+    /**
+     * Install addin
+     */
+    Install = 0,
+    /**
+     * Deploy the add-in
+     */
+    Deploy = 1,
+    /**
+     * Upgrade addin
+     */
+    Upgrade = 2,
+    /**
+     * Retract addin
+     */
+    Retract = 3,
+    /**
+     * UnInstall addin
+     */
+    Uninstall = 4,
+    /**
+     * Remove addin
+     */
+    Remove = 5,
+}
+
 /**
  * Describes a collection of webs
  *
@@ -466,6 +493,33 @@ export class Web extends SharePointQueryableShareableWeb {
      */
     public getStorageEntity(key: string): Promise<string> {
        return this.clone(Web, `getStorageEntity('${key}')`).get();
+    }
+
+    /**
+     * Get available apps from appcatalog
+     */
+
+    public getAvailableApps(): Promise<string> {
+        return this.clone(Web, `tenantappcatalog/AvailableApps`).get();
+    }
+
+    /**
+     * Get specific app from appcatalog
+     * @param id - Specify the guid of the app
+     */
+
+    public getAppById(id: string): Promise<string> {
+        return this.clone(Web, `tenantappcatalog/AvailableApps/GetById('${id}')`).get();
+    }
+
+    /**
+     * Perform app operation on the app from appcatalog
+     * @param id - Specify the guid of the app
+     * @param appEvent - Specify the type of event you want to perform
+     */
+
+    public appOperation(id: string, appEvent: AppOperation): Promise<string> {
+        return this.clone(Web, `tenantappcatalog/AvailableApps/GetById('${id}')/${appEvent}`).postCore();
     }
 }
 
