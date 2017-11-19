@@ -21,29 +21,29 @@ import { RelatedItemManger, RelatedItemManagerImpl } from "./relateditems";
 
 export enum AppOperation {
     /**
-     * Install addin
-     */
-    Install = 0,
-    /**
-     * Deploy the add-in
-     */
-    Deploy = 1,
-    /**
-     * Upgrade addin
-     */
-    Upgrade = 2,
-    /**
-     * Retract addin
-     */
-    Retract = 3,
-    /**
-     * UnInstall addin
-     */
-    Uninstall = 4,
-    /**
-     * Remove addin
-     */
-    Remove = 5,
+   * Install addin
+   */
+  Install = "Install",
+  /**
+   * Deploy the add-in
+   */
+  Deploy = "Deploy",
+  /**
+   * Upgrade addin
+   */
+  Upgrade = "Upgrade",
+  /**
+   * Retract addin
+   */
+  Retract = "Retract",
+  /**
+   * UnInstall addin
+   */
+  Uninstall = "Uninstall",
+  /**
+   * Remove addin
+   */
+  Remove = "Remove",
 }
 
 /**
@@ -515,11 +515,11 @@ export class Web extends SharePointQueryableShareableWeb {
     /**
      * Perform app operation on the app from appcatalog
      * @param id - Specify the guid of the app
-     * @param appEvent - Specify the type of event you want to perform
+     * @param operation - Specify the type of operation you want to perform
      */
 
-    public appOperation(id: string, appEvent: AppOperation): Promise<string> {
-        return this.clone(Web, `tenantappcatalog/AvailableApps/GetById('${id}')/${appEvent}`).postCore();
+    public appOperation(id: string, operation: AppOperation): Promise<string> {
+        return this.clone(Web, `tenantappcatalog/AvailableApps/GetById('${id}')/${operation}`).postCore();
     }
 }
 
