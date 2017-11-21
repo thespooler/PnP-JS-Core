@@ -531,7 +531,7 @@ export class Web extends SharePointQueryableShareableWeb {
      * @param shouldOverWrite Should an app with the same name in the same location be overwritten? (default: true)
      * @returns The response.
      */
-    
+
     public addApp(url: string, content: ArrayBuffer | Blob, shouldOverWrite = true): Promise<any> {
         return this.clone(Web, `tenantappcatalog/add(overwrite=${shouldOverWrite},url='${url}')`)
             .postCore({
