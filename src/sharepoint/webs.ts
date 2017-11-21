@@ -496,7 +496,7 @@ export class Web extends SharePointQueryableShareableWeb {
     }
 
     /**
-     * Get available apps from appcatalog
+     * Get all available apps from app catalog
      */
 
     public getAvailableApps(): Promise<string> {
@@ -504,7 +504,7 @@ export class Web extends SharePointQueryableShareableWeb {
     }
 
     /**
-     * Get specific app from appcatalog
+     * Get details of specific app from the app catalog
      * @param id - Specify the guid of the app
      */
 
@@ -513,9 +513,10 @@ export class Web extends SharePointQueryableShareableWeb {
     }
 
     /**
-     * Perform app operation on the app from appcatalog
+     * Perform app operation on the app from app catalog
      * @param id - Specify the guid of the app
-     * @param operation - Specify the type of operation you want to perform
+     * @param operation - Specify the type of operation you want to perform. 
+     * The Deploy, Retract and Remove operations will work in the context of tenant app catalog site only
      */
 
     public appOperation(id: string, operation: AppOperation): Promise<string> {
@@ -525,11 +526,12 @@ export class Web extends SharePointQueryableShareableWeb {
     /**
      * Uploads an app package. Not supported for batching
      *
-     * @param url The url of the app.
+     * @param url The name of the app.
      * @param content The app package (eg: the .app or .sppkg file).
      * @param shouldOverWrite Should an app with the same name in the same location be overwritten? (default: true)
      * @returns The response.
      */
+    
     public addApp(url: string, content: ArrayBuffer | Blob, shouldOverWrite = true): Promise<any> {
         return this.clone(Web, `tenantappcatalog/add(overwrite=${shouldOverWrite},url='${url}')`)
             .postCore({
