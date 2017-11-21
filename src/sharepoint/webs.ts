@@ -521,6 +521,25 @@ export class Web extends SharePointQueryableShareableWeb {
     public appOperation(id: string, operation: AppOperation): Promise<string> {
         return this.clone(Web, `tenantappcatalog/AvailableApps/GetById('${id}')/${operation}`).postCore();
     }
+
+    /**
+     * Uploads an app package. Not supported for batching
+     *
+     * @param url The url of the app.
+     * @param content The app package (eg: the .app or .sppkg file).
+     * @param shouldOverWrite Should an app with the same name in the same location be overwritten? (default: true)
+     * @returns The response.
+     */
+    public addApp(url: string, content: ArrayBuffer | Blob, shouldOverWrite = true): Promise<any> {
+        return this.clone(Web, `tenantappcatalog/add(overwrite=${shouldOverWrite},url='${url}')`)
+            .postCore({
+                body: content,
+            }).then((response) => {
+                return {
+                    data: response,
+                };
+            });
+    }
 }
 
 /**
