@@ -66,6 +66,12 @@ describe("Web", () => {
         });
     });
 
+    describe("siteUserInfoList", () => {
+        it("should return _api/web/siteUserInfoList", () => {
+            expect(web.siteUsers.toUrl()).to.match(toMatchEndRegex("_api/web/siteuserinfolist"));
+        });
+    });
+
     describe("folders", () => {
         it("should return _api/web/folders", () => {
             expect(web.folders.toUrl()).to.match(toMatchEndRegex("_api/web/folders"));
@@ -153,6 +159,12 @@ describe("Web", () => {
         describe("siteGroups", () => {
             it("should get the site groups for this web", () => {
                 return expect(pnp.sp.web.siteGroups.get()).to.eventually.be.fulfilled;
+            });
+        });
+
+        describe("siteUserInfoList", () => {
+            it("should get the site user info list for this web", () => {
+                return expect(pnp.sp.web.siteUserInfoList.get()).to.eventually.be.fulfilled;
             });
         });
 
