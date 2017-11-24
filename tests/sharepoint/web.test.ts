@@ -68,7 +68,7 @@ describe("Web", () => {
 
     describe("siteUserInfoList", () => {
         it("should return _api/web/siteUserInfoList", () => {
-            expect(web.siteUsers.toUrl()).to.match(toMatchEndRegex("_api/web/siteuserinfolist"));
+            expect(web.siteUserInfoList.toUrl()).to.match(toMatchEndRegex("_api/web/siteuserinfolist"));
         });
     });
 
