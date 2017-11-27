@@ -211,6 +211,15 @@ export class Web extends SharePointQueryableShareableWeb {
     }
 
     /**
+     * Gets site user info list
+     *
+     */
+    public get siteUserInfoList(): List {
+        return new List(this, "siteuserinfolist");
+    }
+
+
+    /**
      * Gets the current user
      */
     public get currentUser(): CurrentUser {
