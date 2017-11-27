@@ -2,6 +2,9 @@
 import pnp from "../src/pnp";
 import { Logger, LogLevel } from "../src/utils/logging";
 
+// shim a type of process
+declare var process: { exit(code?: number): void };
+
 export function Example() {
 
     // run some debugging
@@ -13,5 +16,7 @@ export function Example() {
             level: LogLevel.Info,
             message: "Web's Title",
         });
+
+        process.exit(0);
     });
 }

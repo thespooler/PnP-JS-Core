@@ -18,33 +18,7 @@ import { ODataBatch } from "./batch";
 import { Features } from "./features";
 import { SharePointQueryableShareableWeb } from "./sharepointqueryableshareable";
 import { RelatedItemManger, RelatedItemManagerImpl } from "./relateditems";
-
-export enum AppOperation {
-    /**
-   * Install addin
-   */
-  Install = "Install",
-  /**
-   * Deploy the add-in
-   */
-  Deploy = "Deploy",
-  /**
-   * Upgrade addin
-   */
-  Upgrade = "Upgrade",
-  /**
-   * Retract addin
-   */
-  Retract = "Retract",
-  /**
-   * UnInstall addin
-   */
-  Uninstall = "Uninstall",
-  /**
-   * Remove addin
-   */
-  Remove = "Remove",
-}
+import { AppCatalog } from "./appcatalog";
 
 /**
  * Describes a collection of webs
@@ -160,9 +134,9 @@ export class Web extends SharePointQueryableShareableWeb {
     * @param nWebTemplateFilter Specifies the site definition (default = -1)
     * @param nConfigurationFilter A 16-bit integer that specifies the identifier of a configuration (default = -1)
     */
-     public getSubwebsFilteredForCurrentUser(nWebTemplateFilter = -1, nConfigurationFilter = -1): Webs {
-         return this.clone(Webs, `getSubwebsFilteredForCurrentUser(nWebTemplateFilter=${nWebTemplateFilter},nConfigurationFilter=${nConfigurationFilter})`);
-     }
+    public getSubwebsFilteredForCurrentUser(nWebTemplateFilter = -1, nConfigurationFilter = -1): Webs {
+        return this.clone(Webs, `getSubwebsFilteredForCurrentUser(nWebTemplateFilter=${nWebTemplateFilter},nConfigurationFilter=${nConfigurationFilter})`);
+    }
 
     /**
      * Gets a collection of WebInfos for this web's subwebs
@@ -492,55 +466,16 @@ export class Web extends SharePointQueryableShareableWeb {
      * @param key 
      */
     public getStorageEntity(key: string): Promise<string> {
-       return this.clone(Web, `getStorageEntity('${key}')`).get();
+        return this.clone(Web, `getStorageEntity('${key}')`).get();
     }
 
     /**
-     * Get all available apps from app catalog
+     * Gets the app catalog for this web
+     * 
+     * @param url Optional url or web containing the app catalog (default: current web)
      */
-
-    public getAvailableApps(): Promise<string> {
-        return this.clone(Web, `tenantappcatalog/AvailableApps`).get();
-    }
-
-    /**
-     * Get details of specific app from the app catalog
-     * @param id - Specify the guid of the app
-     */
-
-    public getAppById(id: string): Promise<string> {
-        return this.clone(Web, `tenantappcatalog/AvailableApps/GetById('${id}')`).get();
-    }
-
-    /**
-     * Perform app operation on the app from app catalog
-     * @param id - Specify the guid of the app
-     * @param operation - Specify the type of operation you want to perform. 
-     * The Deploy, Retract and Remove operations will work in the context of tenant app catalog site only
-     */
-
-    public appOperation(id: string, operation: AppOperation): Promise<string> {
-        return this.clone(Web, `tenantappcatalog/AvailableApps/GetById('${id}')/${operation}`).postCore();
-    }
-
-    /**
-     * Uploads an app package. Not supported for batching
-     *
-     * @param url The name of the app.
-     * @param content The app package (eg: the .app or .sppkg file).
-     * @param shouldOverWrite Should an app with the same name in the same location be overwritten? (default: true)
-     * @returns The response.
-     */
-
-    public addApp(url: string, content: ArrayBuffer | Blob, shouldOverWrite = true): Promise<any> {
-        return this.clone(Web, `tenantappcatalog/add(overwrite=${shouldOverWrite},url='${url}')`)
-            .postCore({
-                body: content,
-            }).then((response) => {
-                return {
-                    data: response,
-                };
-            });
+    public getAppCatalog(url?: string | Web) {
+        return new AppCatalog(url || this);
     }
 }
 
