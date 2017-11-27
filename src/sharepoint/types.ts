@@ -1403,3 +1403,14 @@ export interface RenderListDataParameters {
     FolderServerRelativeUrl?: string;
     RenderOptions?: RenderListDataOptions;
 }
+
+export interface AppData {
+    AppCatalogVersion?: string;
+    CanUpgrade?: boolean;
+    CurrentVersionDeployed?: boolean;
+    Deployed?: boolean;
+    ID?: string;
+    InstalledVersion?: string;
+    IsClientSideSolution?: boolean;
+    Title?: string;
+}

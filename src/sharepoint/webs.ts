@@ -18,6 +18,7 @@ import { ODataBatch } from "./batch";
 import { Features } from "./features";
 import { SharePointQueryableShareableWeb } from "./sharepointqueryableshareable";
 import { RelatedItemManger, RelatedItemManagerImpl } from "./relateditems";
+import { AppCatalog } from "./appcatalog";
 
 /**
  * Describes a collection of webs
@@ -133,9 +134,9 @@ export class Web extends SharePointQueryableShareableWeb {
     * @param nWebTemplateFilter Specifies the site definition (default = -1)
     * @param nConfigurationFilter A 16-bit integer that specifies the identifier of a configuration (default = -1)
     */
-     public getSubwebsFilteredForCurrentUser(nWebTemplateFilter = -1, nConfigurationFilter = -1): Webs {
-         return this.clone(Webs, `getSubwebsFilteredForCurrentUser(nWebTemplateFilter=${nWebTemplateFilter},nConfigurationFilter=${nConfigurationFilter})`);
-     }
+    public getSubwebsFilteredForCurrentUser(nWebTemplateFilter = -1, nConfigurationFilter = -1): Webs {
+        return this.clone(Webs, `getSubwebsFilteredForCurrentUser(nWebTemplateFilter=${nWebTemplateFilter},nConfigurationFilter=${nConfigurationFilter})`);
+    }
 
     /**
      * Gets a collection of WebInfos for this web's subwebs
@@ -465,7 +466,16 @@ export class Web extends SharePointQueryableShareableWeb {
      * @param key 
      */
     public getStorageEntity(key: string): Promise<string> {
-       return this.clone(Web, `getStorageEntity('${key}')`).get();
+        return this.clone(Web, `getStorageEntity('${key}')`).get();
+    }
+
+    /**
+     * Gets the app catalog for this web
+     * 
+     * @param url Optional url or web containing the app catalog (default: current web)
+     */
+    public getAppCatalog(url?: string | Web) {
+        return new AppCatalog(url || this);
     }
 }
 
