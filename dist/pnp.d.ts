@@ -6513,8 +6513,13 @@ declare module "graph/groups" {
 }
 declare module "graph/me" {
     import { GraphQueryable, GraphQueryableInstance } from "graph/graphqueryable";
+    import { Events } from "graph/calendars";
     export class Me extends GraphQueryableInstance {
         constructor(baseUrl: string | GraphQueryable, path?: string);
+        /**
+         * Retrieve a list of event objects
+         */
+        readonly events: Events;
     }
 }
 declare module "graph/v1" {

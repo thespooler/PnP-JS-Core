@@ -78,7 +78,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/assets/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 43);
+/******/ 	return __webpack_require__(__webpack_require__.s = 44);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2499,7 +2499,7 @@ var odata_1 = __webpack_require__(6);
 var batch_1 = __webpack_require__(37);
 var features_1 = __webpack_require__(38);
 var sharepointqueryableshareable_1 = __webpack_require__(16);
-var relateditems_1 = __webpack_require__(51);
+var relateditems_1 = __webpack_require__(52);
 var appcatalog_1 = __webpack_require__(39);
 /**
  * Describes a collection of webs
@@ -3363,11 +3363,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var items_1 = __webpack_require__(15);
-var views_1 = __webpack_require__(48);
+var views_1 = __webpack_require__(49);
 var contenttypes_1 = __webpack_require__(24);
 var fields_1 = __webpack_require__(35);
-var forms_1 = __webpack_require__(49);
-var subscriptions_1 = __webpack_require__(50);
+var forms_1 = __webpack_require__(50);
+var subscriptions_1 = __webpack_require__(51);
 var sharepointqueryable_1 = __webpack_require__(1);
 var sharepointqueryablesecurable_1 = __webpack_require__(32);
 var util_1 = __webpack_require__(0);
@@ -3848,7 +3848,7 @@ var files_1 = __webpack_require__(9);
 var contenttypes_1 = __webpack_require__(24);
 var util_1 = __webpack_require__(0);
 var core_1 = __webpack_require__(13);
-var attachmentfiles_1 = __webpack_require__(47);
+var attachmentfiles_1 = __webpack_require__(48);
 var lists_1 = __webpack_require__(14);
 /**
  * Describes a collection of Item objects
@@ -5796,7 +5796,7 @@ exports.PipelineMethods = PipelineMethods;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var digestcache_1 = __webpack_require__(46);
+var digestcache_1 = __webpack_require__(47);
 var util_1 = __webpack_require__(0);
 var pnplibconfig_1 = __webpack_require__(4);
 var exceptions_1 = __webpack_require__(2);
@@ -9103,6 +9103,110 @@ exports.GraphHttpClient = GraphHttpClient;
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var graphqueryable_1 = __webpack_require__(3);
+// import { Attachments } from "./attachments";
+var Calendars = /** @class */ (function (_super) {
+    __extends(Calendars, _super);
+    function Calendars(baseUrl, path) {
+        if (path === void 0) { path = "calendars"; }
+        return _super.call(this, baseUrl, path) || this;
+    }
+    return Calendars;
+}(graphqueryable_1.GraphQueryableCollection));
+exports.Calendars = Calendars;
+var Calendar = /** @class */ (function (_super) {
+    __extends(Calendar, _super);
+    function Calendar() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Object.defineProperty(Calendar.prototype, "events", {
+        get: function () {
+            return new Events(this);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Calendar;
+}(graphqueryable_1.GraphQueryableInstance));
+exports.Calendar = Calendar;
+var Events = /** @class */ (function (_super) {
+    __extends(Events, _super);
+    function Events(baseUrl, path) {
+        if (path === void 0) { path = "events"; }
+        return _super.call(this, baseUrl, path) || this;
+    }
+    Events.prototype.getById = function (id) {
+        return new Event(this, id);
+    };
+    /**
+     * Adds a new event to the collection
+     *
+     * @param properties The set of properties used to create the event
+     */
+    Events.prototype.add = function (properties) {
+        var _this = this;
+        return this.postCore({
+            body: JSON.stringify(properties),
+        }).then(function (r) {
+            return {
+                data: r,
+                event: _this.getById(r.id),
+            };
+        });
+    };
+    return Events;
+}(graphqueryable_1.GraphQueryableCollection));
+exports.Events = Events;
+var Event = /** @class */ (function (_super) {
+    __extends(Event, _super);
+    function Event() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    // TODO:: when supported
+    // /**
+    //  * Gets the collection of attachments for this event
+    //  */
+    // public get attachments(): Attachments {
+    //     return new Attachments(this);
+    // }
+    /**
+     * Update the properties of an event object
+     *
+     * @param properties Set of properties of this event to update
+     */
+    Event.prototype.update = function (properties) {
+        return this.patchCore({
+            body: JSON.stringify(properties),
+        });
+    };
+    /**
+     * Deletes this event
+     */
+    Event.prototype.delete = function () {
+        return this.deleteCore();
+    };
+    return Event;
+}(graphqueryable_1.GraphQueryableInstance));
+exports.Event = Event;
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 var storage = __webpack_require__(12);
 var exceptions_1 = __webpack_require__(2);
@@ -9172,7 +9276,7 @@ exports.default = CachingConfigurationProvider;
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9183,11 +9287,11 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
 var storage_1 = __webpack_require__(12);
-var configuration_1 = __webpack_require__(44);
+var configuration_1 = __webpack_require__(45);
 var logging_1 = __webpack_require__(5);
-var rest_1 = __webpack_require__(45);
+var rest_1 = __webpack_require__(46);
 var pnplibconfig_1 = __webpack_require__(4);
-var rest_2 = __webpack_require__(54);
+var rest_2 = __webpack_require__(55);
 /**
  * Root class of the Patterns and Practices namespace, provides an entry point to the library
  */
@@ -9268,7 +9372,7 @@ exports.default = Def;
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9367,7 +9471,7 @@ exports.Settings = Settings;
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9378,7 +9482,7 @@ var searchsuggest_1 = __webpack_require__(30);
 var site_1 = __webpack_require__(31);
 var webs_1 = __webpack_require__(11);
 var util_1 = __webpack_require__(0);
-var userprofiles_1 = __webpack_require__(52);
+var userprofiles_1 = __webpack_require__(53);
 var exceptions_1 = __webpack_require__(2);
 var utilities_1 = __webpack_require__(40);
 /**
@@ -9535,7 +9639,7 @@ exports.SPRest = SPRest;
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9601,7 +9705,7 @@ exports.DigestCache = DigestCache;
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9758,7 +9862,7 @@ exports.AttachmentFile = AttachmentFile;
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9945,7 +10049,7 @@ exports.ViewFields = ViewFields;
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10005,7 +10109,7 @@ exports.Form = Form;
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10105,7 +10209,7 @@ exports.Subscription = Subscription;
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10238,7 +10342,7 @@ exports.RelatedItemManagerImpl = RelatedItemManagerImpl;
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10255,7 +10359,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var sharepointqueryable_1 = __webpack_require__(1);
-var files_1 = __webpack_require__(53);
+var files_1 = __webpack_require__(54);
 var parsers_1 = __webpack_require__(7);
 var UserProfileQuery = /** @class */ (function (_super) {
     __extends(UserProfileQuery, _super);
@@ -10556,7 +10660,7 @@ var ProfileLoader = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10610,13 +10714,13 @@ function readBlobAs(blob, mode) {
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var v1_1 = __webpack_require__(55);
+var v1_1 = __webpack_require__(56);
 var GraphRest = /** @class */ (function () {
     function GraphRest() {
     }
@@ -10633,7 +10737,7 @@ exports.GraphRest = GraphRest;
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10650,7 +10754,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var graphqueryable_1 = __webpack_require__(3);
-var groups_1 = __webpack_require__(56);
+var groups_1 = __webpack_require__(57);
 var me_1 = __webpack_require__(63);
 /**
  * Root object wrapping v1 functionality for MS Graph
@@ -10688,7 +10792,7 @@ exports.V1 = V1;
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10705,9 +10809,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var graphqueryable_1 = __webpack_require__(3);
-var members_1 = __webpack_require__(57);
+var members_1 = __webpack_require__(58);
 var util_1 = __webpack_require__(0);
-var calendars_1 = __webpack_require__(58);
+var calendars_1 = __webpack_require__(42);
 var conversations_1 = __webpack_require__(59);
 var plans_1 = __webpack_require__(61);
 var photos_1 = __webpack_require__(62);
@@ -10956,7 +11060,7 @@ exports.Group = Group;
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11021,110 +11125,6 @@ var Owners = /** @class */ (function (_super) {
     return Owners;
 }(Members));
 exports.Owners = Owners;
-
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var graphqueryable_1 = __webpack_require__(3);
-// import { Attachments } from "./attachments";
-var Calendars = /** @class */ (function (_super) {
-    __extends(Calendars, _super);
-    function Calendars(baseUrl, path) {
-        if (path === void 0) { path = "calendars"; }
-        return _super.call(this, baseUrl, path) || this;
-    }
-    return Calendars;
-}(graphqueryable_1.GraphQueryableCollection));
-exports.Calendars = Calendars;
-var Calendar = /** @class */ (function (_super) {
-    __extends(Calendar, _super);
-    function Calendar() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Object.defineProperty(Calendar.prototype, "events", {
-        get: function () {
-            return new Events(this);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return Calendar;
-}(graphqueryable_1.GraphQueryableInstance));
-exports.Calendar = Calendar;
-var Events = /** @class */ (function (_super) {
-    __extends(Events, _super);
-    function Events(baseUrl, path) {
-        if (path === void 0) { path = "events"; }
-        return _super.call(this, baseUrl, path) || this;
-    }
-    Events.prototype.getById = function (id) {
-        return new Event(this, id);
-    };
-    /**
-     * Adds a new event to the collection
-     *
-     * @param properties The set of properties used to create the event
-     */
-    Events.prototype.add = function (properties) {
-        var _this = this;
-        return this.postCore({
-            body: JSON.stringify(properties),
-        }).then(function (r) {
-            return {
-                data: r,
-                event: _this.getById(r.id),
-            };
-        });
-    };
-    return Events;
-}(graphqueryable_1.GraphQueryableCollection));
-exports.Events = Events;
-var Event = /** @class */ (function (_super) {
-    __extends(Event, _super);
-    function Event() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    // TODO:: when supported
-    // /**
-    //  * Gets the collection of attachments for this event
-    //  */
-    // public get attachments(): Attachments {
-    //     return new Attachments(this);
-    // }
-    /**
-     * Update the properties of an event object
-     *
-     * @param properties Set of properties of this event to update
-     */
-    Event.prototype.update = function (properties) {
-        return this.patchCore({
-            body: JSON.stringify(properties),
-        });
-    };
-    /**
-     * Deletes this event
-     */
-    Event.prototype.delete = function () {
-        return this.deleteCore();
-    };
-    return Event;
-}(graphqueryable_1.GraphQueryableInstance));
-exports.Event = Event;
 
 
 /***/ }),
@@ -11544,12 +11544,23 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var graphqueryable_1 = __webpack_require__(3);
+var calendars_1 = __webpack_require__(42);
 var Me = /** @class */ (function (_super) {
     __extends(Me, _super);
     function Me(baseUrl, path) {
         if (path === void 0) { path = "me"; }
         return _super.call(this, baseUrl, path) || this;
     }
+    Object.defineProperty(Me.prototype, "events", {
+        /**
+         * Retrieve a list of event objects
+         */
+        get: function () {
+            return new calendars_1.Events(this);
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Me;
 }(graphqueryable_1.GraphQueryableInstance));
 exports.Me = Me;
@@ -11582,7 +11593,7 @@ __export(__webpack_require__(12));
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cachingConfigurationProvider_1 = __webpack_require__(42);
+var cachingConfigurationProvider_1 = __webpack_require__(43);
 exports.CachingConfigurationProvider = cachingConfigurationProvider_1.default;
 var spListConfigurationProvider_1 = __webpack_require__(66);
 exports.SPListConfigurationProvider = spListConfigurationProvider_1.default;
@@ -11595,7 +11606,7 @@ exports.SPListConfigurationProvider = spListConfigurationProvider_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cachingConfigurationProvider_1 = __webpack_require__(42);
+var cachingConfigurationProvider_1 = __webpack_require__(43);
 /**
  * A configuration provider which loads configuration values from a SharePoint list
  *
