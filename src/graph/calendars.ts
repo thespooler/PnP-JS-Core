@@ -32,7 +32,7 @@ export class Events extends GraphQueryableCollection {
      * 
      * @param properties The set of properties used to create the event
      */
-    public add(properties: Event): Promise<EventAddResult> {
+    public add(properties: TypedHash<any> = {}): Promise<EventAddResult> {
 
         return this.postCore({
             body: JSON.stringify(properties),

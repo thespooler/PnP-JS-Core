@@ -15,7 +15,7 @@ export declare class Events extends GraphQueryableCollection {
      *
      * @param properties The set of properties used to create the event
      */
-    add(properties: Event): Promise<EventAddResult>;
+    add(properties?: TypedHash<any>): Promise<EventAddResult>;
 }
 export interface EventAddResult {
     data: IEvent;
