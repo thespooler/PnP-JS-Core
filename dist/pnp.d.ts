@@ -6511,9 +6511,16 @@ declare module "graph/groups" {
         data: any;
     }
 }
+declare module "graph/me" {
+    import { GraphQueryable, GraphQueryableInstance } from "graph/graphqueryable";
+    export class Me extends GraphQueryableInstance {
+        constructor(baseUrl: string | GraphQueryable, path?: string);
+    }
+}
 declare module "graph/v1" {
     import { GraphQueryable } from "graph/graphqueryable";
     import { Groups } from "graph/groups";
+    import { Me } from "graph/me";
     /**
      * Root object wrapping v1 functionality for MS Graph
      *
@@ -6527,6 +6534,7 @@ declare module "graph/v1" {
          */
         constructor(baseUrl: string | GraphQueryable, path?: string);
         readonly groups: Groups;
+        readonly me: Me;
     }
 }
 declare module "graph/rest" {
@@ -6785,12 +6793,6 @@ declare module "pnp" {
         util: typeof Util;
     };
     export default Def;
-}
-declare module "graph/me" {
-    import { GraphQueryable, GraphQueryableInstance } from "graph/graphqueryable";
-    export class Me extends GraphQueryableInstance {
-        constructor(baseUrl: string | GraphQueryable, path?: string);
-    }
 }
 declare module "net/nodefetchclientbrowser" {
     import { HttpClientImpl } from "net/httpclient";

@@ -88,7 +88,7 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 Object.defineProperty(exports, "__esModule", { value: true });
-var pnplibconfig_1 = __webpack_require__(3);
+var pnplibconfig_1 = __webpack_require__(4);
 function extractWebUrl(candidateUrl) {
     if (candidateUrl === null) {
         return "";
@@ -391,7 +391,7 @@ var util_1 = __webpack_require__(0);
 var collections_1 = __webpack_require__(8);
 var utils_1 = __webpack_require__(10);
 var exceptions_1 = __webpack_require__(2);
-var logging_1 = __webpack_require__(4);
+var logging_1 = __webpack_require__(5);
 var queryable_1 = __webpack_require__(19);
 var pipeline_1 = __webpack_require__(20);
 var httpclient_1 = __webpack_require__(21);
@@ -746,7 +746,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var logging_1 = __webpack_require__(4);
+var logging_1 = __webpack_require__(5);
 function defaultLog(error) {
     logging_1.Logger.log({ data: {}, level: logging_1.LogLevel.Error, message: "[" + error.name + "]::" + error.message });
 }
@@ -918,502 +918,6 @@ exports.UrlException = UrlException;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var fetchclient_1 = __webpack_require__(27);
-var RuntimeConfigImpl = /** @class */ (function () {
-    function RuntimeConfigImpl() {
-        // these are our default values for the library
-        this._defaultCachingStore = "session";
-        this._defaultCachingTimeoutSeconds = 60;
-        this._globalCacheDisable = false;
-        this._enableCacheExpiration = false;
-        this._cacheExpirationIntervalMilliseconds = 750;
-        this._spfxContext = null;
-        // sharepoint settings
-        this._spFetchClientFactory = function () { return new fetchclient_1.FetchClient(); };
-        this._spBaseUrl = null;
-        this._spHeaders = null;
-        // ms graph settings
-        this._graphHeaders = null;
-        this._graphFetchClientFactory = function () { return null; };
-    }
-    RuntimeConfigImpl.prototype.set = function (config) {
-        var _this = this;
-        if (config.hasOwnProperty("globalCacheDisable")) {
-            this._globalCacheDisable = config.globalCacheDisable;
-        }
-        if (config.hasOwnProperty("defaultCachingStore")) {
-            this._defaultCachingStore = config.defaultCachingStore;
-        }
-        if (config.hasOwnProperty("defaultCachingTimeoutSeconds")) {
-            this._defaultCachingTimeoutSeconds = config.defaultCachingTimeoutSeconds;
-        }
-        if (config.hasOwnProperty("sp")) {
-            if (config.sp.hasOwnProperty("fetchClientFactory")) {
-                this._spFetchClientFactory = config.sp.fetchClientFactory;
-            }
-            if (config.sp.hasOwnProperty("baseUrl")) {
-                this._spBaseUrl = config.sp.baseUrl;
-            }
-            if (config.sp.hasOwnProperty("headers")) {
-                this._spHeaders = config.sp.headers;
-            }
-        }
-        if (config.hasOwnProperty("spfxContext")) {
-            this._spfxContext = config.spfxContext;
-            if (typeof this._spfxContext.graphHttpClient !== "undefined") {
-                this._graphFetchClientFactory = function () { return _this._spfxContext.graphHttpClient; };
-            }
-        }
-        if (config.hasOwnProperty("graph")) {
-            if (config.graph.hasOwnProperty("headers")) {
-                this._graphHeaders = config.graph.headers;
-            }
-            // this comes after the default setting of the _graphFetchClientFactory client so it can be overwritten
-            if (config.graph.hasOwnProperty("fetchClientFactory")) {
-                this._graphFetchClientFactory = config.graph.fetchClientFactory;
-            }
-        }
-        if (config.hasOwnProperty("enableCacheExpiration")) {
-            this._enableCacheExpiration = config.enableCacheExpiration;
-        }
-        if (config.hasOwnProperty("cacheExpirationIntervalMilliseconds")) {
-            // we don't let the interval be less than 300 milliseconds
-            var interval = config.cacheExpirationIntervalMilliseconds < 300 ? 300 : config.cacheExpirationIntervalMilliseconds;
-            this._cacheExpirationIntervalMilliseconds = interval;
-        }
-    };
-    Object.defineProperty(RuntimeConfigImpl.prototype, "defaultCachingStore", {
-        get: function () {
-            return this._defaultCachingStore;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RuntimeConfigImpl.prototype, "defaultCachingTimeoutSeconds", {
-        get: function () {
-            return this._defaultCachingTimeoutSeconds;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RuntimeConfigImpl.prototype, "globalCacheDisable", {
-        get: function () {
-            return this._globalCacheDisable;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RuntimeConfigImpl.prototype, "spFetchClientFactory", {
-        get: function () {
-            return this._spFetchClientFactory;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RuntimeConfigImpl.prototype, "spBaseUrl", {
-        get: function () {
-            if (this._spBaseUrl !== null) {
-                return this._spBaseUrl;
-            }
-            else if (this._spfxContext !== null) {
-                return this._spfxContext.pageContext.web.absoluteUrl;
-            }
-            return null;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RuntimeConfigImpl.prototype, "spHeaders", {
-        get: function () {
-            return this._spHeaders;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RuntimeConfigImpl.prototype, "enableCacheExpiration", {
-        get: function () {
-            return this._enableCacheExpiration;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RuntimeConfigImpl.prototype, "cacheExpirationIntervalMilliseconds", {
-        get: function () {
-            return this._cacheExpirationIntervalMilliseconds;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RuntimeConfigImpl.prototype, "spfxContext", {
-        get: function () {
-            return this._spfxContext;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RuntimeConfigImpl.prototype, "graphFetchClientFactory", {
-        get: function () {
-            return this._graphFetchClientFactory;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RuntimeConfigImpl.prototype, "graphHeaders", {
-        get: function () {
-            return this._graphHeaders;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return RuntimeConfigImpl;
-}());
-exports.RuntimeConfigImpl = RuntimeConfigImpl;
-var _runtimeConfig = new RuntimeConfigImpl();
-exports.RuntimeConfig = _runtimeConfig;
-function setRuntimeConfig(config) {
-    _runtimeConfig.set(config);
-}
-exports.setRuntimeConfig = setRuntimeConfig;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * A set of logging levels
- *
- */
-var LogLevel;
-(function (LogLevel) {
-    LogLevel[LogLevel["Verbose"] = 0] = "Verbose";
-    LogLevel[LogLevel["Info"] = 1] = "Info";
-    LogLevel[LogLevel["Warning"] = 2] = "Warning";
-    LogLevel[LogLevel["Error"] = 3] = "Error";
-    LogLevel[LogLevel["Off"] = 99] = "Off";
-})(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
-/**
- * Class used to subscribe ILogListener and log messages throughout an application
- *
- */
-var Logger = /** @class */ (function () {
-    function Logger() {
-    }
-    Object.defineProperty(Logger, "activeLogLevel", {
-        get: function () {
-            return Logger.instance.activeLogLevel;
-        },
-        set: function (value) {
-            Logger.instance.activeLogLevel = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Logger, "instance", {
-        get: function () {
-            if (typeof Logger._instance === "undefined" || Logger._instance === null) {
-                Logger._instance = new LoggerImpl();
-            }
-            return Logger._instance;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * Adds ILogListener instances to the set of subscribed listeners
-     *
-     * @param listeners One or more listeners to subscribe to this log
-     */
-    Logger.subscribe = function () {
-        var listeners = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            listeners[_i] = arguments[_i];
-        }
-        listeners.map(function (listener) { return Logger.instance.subscribe(listener); });
-    };
-    /**
-     * Clears the subscribers collection, returning the collection before modifiction
-     */
-    Logger.clearSubscribers = function () {
-        return Logger.instance.clearSubscribers();
-    };
-    Object.defineProperty(Logger, "count", {
-        /**
-         * Gets the current subscriber count
-         */
-        get: function () {
-            return Logger.instance.count;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * Writes the supplied string to the subscribed listeners
-     *
-     * @param message The message to write
-     * @param level [Optional] if supplied will be used as the level of the entry (Default: LogLevel.Verbose)
-     */
-    Logger.write = function (message, level) {
-        if (level === void 0) { level = LogLevel.Verbose; }
-        Logger.instance.log({ level: level, message: message });
-    };
-    /**
-     * Writes the supplied string to the subscribed listeners
-     *
-     * @param json The json object to stringify and write
-     * @param level [Optional] if supplied will be used as the level of the entry (Default: LogLevel.Verbose)
-     */
-    Logger.writeJSON = function (json, level) {
-        if (level === void 0) { level = LogLevel.Verbose; }
-        Logger.instance.log({ level: level, message: JSON.stringify(json) });
-    };
-    /**
-     * Logs the supplied entry to the subscribed listeners
-     *
-     * @param entry The message to log
-     */
-    Logger.log = function (entry) {
-        Logger.instance.log(entry);
-    };
-    /**
-     * Logs performance tracking data for the the execution duration of the supplied function using console.profile
-     *
-     * @param name The name of this profile boundary
-     * @param f The function to execute and track within this performance boundary
-     */
-    Logger.measure = function (name, f) {
-        return Logger.instance.measure(name, f);
-    };
-    return Logger;
-}());
-exports.Logger = Logger;
-var LoggerImpl = /** @class */ (function () {
-    function LoggerImpl(activeLogLevel, subscribers) {
-        if (activeLogLevel === void 0) { activeLogLevel = LogLevel.Warning; }
-        if (subscribers === void 0) { subscribers = []; }
-        this.activeLogLevel = activeLogLevel;
-        this.subscribers = subscribers;
-    }
-    LoggerImpl.prototype.subscribe = function (listener) {
-        this.subscribers.push(listener);
-    };
-    LoggerImpl.prototype.clearSubscribers = function () {
-        var s = this.subscribers.slice(0);
-        this.subscribers.length = 0;
-        return s;
-    };
-    Object.defineProperty(LoggerImpl.prototype, "count", {
-        get: function () {
-            return this.subscribers.length;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    LoggerImpl.prototype.write = function (message, level) {
-        if (level === void 0) { level = LogLevel.Verbose; }
-        this.log({ level: level, message: message });
-    };
-    LoggerImpl.prototype.log = function (entry) {
-        if (typeof entry === "undefined" || entry.level < this.activeLogLevel) {
-            return;
-        }
-        this.subscribers.map(function (subscriber) { return subscriber.log(entry); });
-    };
-    LoggerImpl.prototype.measure = function (name, f) {
-        console.profile(name);
-        try {
-            return f();
-        }
-        finally {
-            console.profileEnd();
-        }
-    };
-    return LoggerImpl;
-}());
-/**
- * Implementation of ILogListener which logs to the browser console
- *
- */
-var ConsoleListener = /** @class */ (function () {
-    function ConsoleListener() {
-    }
-    /**
-     * Any associated data that a given logging listener may choose to log or ignore
-     *
-     * @param entry The information to be logged
-     */
-    ConsoleListener.prototype.log = function (entry) {
-        var msg = this.format(entry);
-        switch (entry.level) {
-            case LogLevel.Verbose:
-            case LogLevel.Info:
-                console.log(msg);
-                break;
-            case LogLevel.Warning:
-                console.warn(msg);
-                break;
-            case LogLevel.Error:
-                console.error(msg);
-                break;
-        }
-    };
-    /**
-     * Formats the message
-     *
-     * @param entry The information to format into a string
-     */
-    ConsoleListener.prototype.format = function (entry) {
-        var msg = [];
-        msg.push("Message: " + entry.message);
-        if (typeof entry.data !== "undefined") {
-            msg.push(" Data: " + JSON.stringify(entry.data));
-        }
-        return msg.join("");
-    };
-    return ConsoleListener;
-}());
-exports.ConsoleListener = ConsoleListener;
-/**
- * Implementation of ILogListener which logs to the supplied function
- *
- */
-var FunctionListener = /** @class */ (function () {
-    /**
-     * Creates a new instance of the FunctionListener class
-     *
-     * @constructor
-     * @param  method The method to which any logging data will be passed
-     */
-    function FunctionListener(method) {
-        this.method = method;
-    }
-    /**
-     * Any associated data that a given logging listener may choose to log or ignore
-     *
-     * @param entry The information to be logged
-     */
-    FunctionListener.prototype.log = function (entry) {
-        this.method(entry);
-    };
-    return FunctionListener;
-}());
-exports.FunctionListener = FunctionListener;
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var util_1 = __webpack_require__(0);
-var logging_1 = __webpack_require__(4);
-var exceptions_1 = __webpack_require__(2);
-var core_1 = __webpack_require__(13);
-function spExtractODataId(candidate) {
-    if (candidate.hasOwnProperty("odata.id")) {
-        return candidate["odata.id"];
-    }
-    else if (candidate.hasOwnProperty("__metadata") && candidate.__metadata.hasOwnProperty("id")) {
-        return candidate.__metadata.id;
-    }
-    else {
-        throw new exceptions_1.ODataIdException(candidate);
-    }
-}
-exports.spExtractODataId = spExtractODataId;
-var SPODataEntityParserImpl = /** @class */ (function (_super) {
-    __extends(SPODataEntityParserImpl, _super);
-    function SPODataEntityParserImpl(factory) {
-        var _this = _super.call(this) || this;
-        _this.factory = factory;
-        _this.hydrate = function (d) {
-            var o = new _this.factory(spGetEntityUrl(d), null);
-            return util_1.Util.extend(o, d);
-        };
-        return _this;
-    }
-    SPODataEntityParserImpl.prototype.parse = function (r) {
-        var _this = this;
-        return _super.prototype.parse.call(this, r).then(function (d) {
-            var o = new _this.factory(spGetEntityUrl(d), null);
-            return util_1.Util.extend(o, d);
-        });
-    };
-    return SPODataEntityParserImpl;
-}(core_1.ODataParserBase));
-var SPODataEntityArrayParserImpl = /** @class */ (function (_super) {
-    __extends(SPODataEntityArrayParserImpl, _super);
-    function SPODataEntityArrayParserImpl(factory) {
-        var _this = _super.call(this) || this;
-        _this.factory = factory;
-        _this.hydrate = function (d) {
-            return d.map(function (v) {
-                var o = new _this.factory(spGetEntityUrl(v), null);
-                return util_1.Util.extend(o, v);
-            });
-        };
-        return _this;
-    }
-    SPODataEntityArrayParserImpl.prototype.parse = function (r) {
-        var _this = this;
-        return _super.prototype.parse.call(this, r).then(function (d) {
-            return d.map(function (v) {
-                var o = new _this.factory(spGetEntityUrl(v), null);
-                return util_1.Util.extend(o, v);
-            });
-        });
-    };
-    return SPODataEntityArrayParserImpl;
-}(core_1.ODataParserBase));
-function spGetEntityUrl(entity) {
-    if (entity.hasOwnProperty("odata.metadata") && entity.hasOwnProperty("odata.editLink")) {
-        // we are dealign with minimal metadata (default)
-        return util_1.Util.combinePaths(util_1.extractWebUrl(entity["odata.metadata"]), "_api", entity["odata.editLink"]);
-    }
-    else if (entity.hasOwnProperty("__metadata")) {
-        // we are dealing with verbose, which has an absolute uri
-        return entity.__metadata.uri;
-    }
-    else {
-        // we are likely dealing with nometadata, so don't error but we won't be able to
-        // chain off these objects
-        logging_1.Logger.write("No uri information found in ODataEntity parsing, chaining will fail for this object.", logging_1.LogLevel.Warning);
-        return "";
-    }
-}
-exports.spGetEntityUrl = spGetEntityUrl;
-function spODataEntity(factory) {
-    return new SPODataEntityParserImpl(factory);
-}
-exports.spODataEntity = spODataEntity;
-function spODataEntityArray(factory) {
-    return new SPODataEntityArrayParserImpl(factory);
-}
-exports.spODataEntityArray = spODataEntityArray;
-
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1699,6 +1203,502 @@ exports.GraphQueryableInstance = GraphQueryableInstance;
 
 
 /***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var fetchclient_1 = __webpack_require__(27);
+var RuntimeConfigImpl = /** @class */ (function () {
+    function RuntimeConfigImpl() {
+        // these are our default values for the library
+        this._defaultCachingStore = "session";
+        this._defaultCachingTimeoutSeconds = 60;
+        this._globalCacheDisable = false;
+        this._enableCacheExpiration = false;
+        this._cacheExpirationIntervalMilliseconds = 750;
+        this._spfxContext = null;
+        // sharepoint settings
+        this._spFetchClientFactory = function () { return new fetchclient_1.FetchClient(); };
+        this._spBaseUrl = null;
+        this._spHeaders = null;
+        // ms graph settings
+        this._graphHeaders = null;
+        this._graphFetchClientFactory = function () { return null; };
+    }
+    RuntimeConfigImpl.prototype.set = function (config) {
+        var _this = this;
+        if (config.hasOwnProperty("globalCacheDisable")) {
+            this._globalCacheDisable = config.globalCacheDisable;
+        }
+        if (config.hasOwnProperty("defaultCachingStore")) {
+            this._defaultCachingStore = config.defaultCachingStore;
+        }
+        if (config.hasOwnProperty("defaultCachingTimeoutSeconds")) {
+            this._defaultCachingTimeoutSeconds = config.defaultCachingTimeoutSeconds;
+        }
+        if (config.hasOwnProperty("sp")) {
+            if (config.sp.hasOwnProperty("fetchClientFactory")) {
+                this._spFetchClientFactory = config.sp.fetchClientFactory;
+            }
+            if (config.sp.hasOwnProperty("baseUrl")) {
+                this._spBaseUrl = config.sp.baseUrl;
+            }
+            if (config.sp.hasOwnProperty("headers")) {
+                this._spHeaders = config.sp.headers;
+            }
+        }
+        if (config.hasOwnProperty("spfxContext")) {
+            this._spfxContext = config.spfxContext;
+            if (typeof this._spfxContext.graphHttpClient !== "undefined") {
+                this._graphFetchClientFactory = function () { return _this._spfxContext.graphHttpClient; };
+            }
+        }
+        if (config.hasOwnProperty("graph")) {
+            if (config.graph.hasOwnProperty("headers")) {
+                this._graphHeaders = config.graph.headers;
+            }
+            // this comes after the default setting of the _graphFetchClientFactory client so it can be overwritten
+            if (config.graph.hasOwnProperty("fetchClientFactory")) {
+                this._graphFetchClientFactory = config.graph.fetchClientFactory;
+            }
+        }
+        if (config.hasOwnProperty("enableCacheExpiration")) {
+            this._enableCacheExpiration = config.enableCacheExpiration;
+        }
+        if (config.hasOwnProperty("cacheExpirationIntervalMilliseconds")) {
+            // we don't let the interval be less than 300 milliseconds
+            var interval = config.cacheExpirationIntervalMilliseconds < 300 ? 300 : config.cacheExpirationIntervalMilliseconds;
+            this._cacheExpirationIntervalMilliseconds = interval;
+        }
+    };
+    Object.defineProperty(RuntimeConfigImpl.prototype, "defaultCachingStore", {
+        get: function () {
+            return this._defaultCachingStore;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "defaultCachingTimeoutSeconds", {
+        get: function () {
+            return this._defaultCachingTimeoutSeconds;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "globalCacheDisable", {
+        get: function () {
+            return this._globalCacheDisable;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "spFetchClientFactory", {
+        get: function () {
+            return this._spFetchClientFactory;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "spBaseUrl", {
+        get: function () {
+            if (this._spBaseUrl !== null) {
+                return this._spBaseUrl;
+            }
+            else if (this._spfxContext !== null) {
+                return this._spfxContext.pageContext.web.absoluteUrl;
+            }
+            return null;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "spHeaders", {
+        get: function () {
+            return this._spHeaders;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "enableCacheExpiration", {
+        get: function () {
+            return this._enableCacheExpiration;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "cacheExpirationIntervalMilliseconds", {
+        get: function () {
+            return this._cacheExpirationIntervalMilliseconds;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "spfxContext", {
+        get: function () {
+            return this._spfxContext;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "graphFetchClientFactory", {
+        get: function () {
+            return this._graphFetchClientFactory;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "graphHeaders", {
+        get: function () {
+            return this._graphHeaders;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return RuntimeConfigImpl;
+}());
+exports.RuntimeConfigImpl = RuntimeConfigImpl;
+var _runtimeConfig = new RuntimeConfigImpl();
+exports.RuntimeConfig = _runtimeConfig;
+function setRuntimeConfig(config) {
+    _runtimeConfig.set(config);
+}
+exports.setRuntimeConfig = setRuntimeConfig;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * A set of logging levels
+ *
+ */
+var LogLevel;
+(function (LogLevel) {
+    LogLevel[LogLevel["Verbose"] = 0] = "Verbose";
+    LogLevel[LogLevel["Info"] = 1] = "Info";
+    LogLevel[LogLevel["Warning"] = 2] = "Warning";
+    LogLevel[LogLevel["Error"] = 3] = "Error";
+    LogLevel[LogLevel["Off"] = 99] = "Off";
+})(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
+/**
+ * Class used to subscribe ILogListener and log messages throughout an application
+ *
+ */
+var Logger = /** @class */ (function () {
+    function Logger() {
+    }
+    Object.defineProperty(Logger, "activeLogLevel", {
+        get: function () {
+            return Logger.instance.activeLogLevel;
+        },
+        set: function (value) {
+            Logger.instance.activeLogLevel = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Logger, "instance", {
+        get: function () {
+            if (typeof Logger._instance === "undefined" || Logger._instance === null) {
+                Logger._instance = new LoggerImpl();
+            }
+            return Logger._instance;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Adds ILogListener instances to the set of subscribed listeners
+     *
+     * @param listeners One or more listeners to subscribe to this log
+     */
+    Logger.subscribe = function () {
+        var listeners = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            listeners[_i] = arguments[_i];
+        }
+        listeners.map(function (listener) { return Logger.instance.subscribe(listener); });
+    };
+    /**
+     * Clears the subscribers collection, returning the collection before modifiction
+     */
+    Logger.clearSubscribers = function () {
+        return Logger.instance.clearSubscribers();
+    };
+    Object.defineProperty(Logger, "count", {
+        /**
+         * Gets the current subscriber count
+         */
+        get: function () {
+            return Logger.instance.count;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Writes the supplied string to the subscribed listeners
+     *
+     * @param message The message to write
+     * @param level [Optional] if supplied will be used as the level of the entry (Default: LogLevel.Verbose)
+     */
+    Logger.write = function (message, level) {
+        if (level === void 0) { level = LogLevel.Verbose; }
+        Logger.instance.log({ level: level, message: message });
+    };
+    /**
+     * Writes the supplied string to the subscribed listeners
+     *
+     * @param json The json object to stringify and write
+     * @param level [Optional] if supplied will be used as the level of the entry (Default: LogLevel.Verbose)
+     */
+    Logger.writeJSON = function (json, level) {
+        if (level === void 0) { level = LogLevel.Verbose; }
+        Logger.instance.log({ level: level, message: JSON.stringify(json) });
+    };
+    /**
+     * Logs the supplied entry to the subscribed listeners
+     *
+     * @param entry The message to log
+     */
+    Logger.log = function (entry) {
+        Logger.instance.log(entry);
+    };
+    /**
+     * Logs performance tracking data for the the execution duration of the supplied function using console.profile
+     *
+     * @param name The name of this profile boundary
+     * @param f The function to execute and track within this performance boundary
+     */
+    Logger.measure = function (name, f) {
+        return Logger.instance.measure(name, f);
+    };
+    return Logger;
+}());
+exports.Logger = Logger;
+var LoggerImpl = /** @class */ (function () {
+    function LoggerImpl(activeLogLevel, subscribers) {
+        if (activeLogLevel === void 0) { activeLogLevel = LogLevel.Warning; }
+        if (subscribers === void 0) { subscribers = []; }
+        this.activeLogLevel = activeLogLevel;
+        this.subscribers = subscribers;
+    }
+    LoggerImpl.prototype.subscribe = function (listener) {
+        this.subscribers.push(listener);
+    };
+    LoggerImpl.prototype.clearSubscribers = function () {
+        var s = this.subscribers.slice(0);
+        this.subscribers.length = 0;
+        return s;
+    };
+    Object.defineProperty(LoggerImpl.prototype, "count", {
+        get: function () {
+            return this.subscribers.length;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    LoggerImpl.prototype.write = function (message, level) {
+        if (level === void 0) { level = LogLevel.Verbose; }
+        this.log({ level: level, message: message });
+    };
+    LoggerImpl.prototype.log = function (entry) {
+        if (typeof entry === "undefined" || entry.level < this.activeLogLevel) {
+            return;
+        }
+        this.subscribers.map(function (subscriber) { return subscriber.log(entry); });
+    };
+    LoggerImpl.prototype.measure = function (name, f) {
+        console.profile(name);
+        try {
+            return f();
+        }
+        finally {
+            console.profileEnd();
+        }
+    };
+    return LoggerImpl;
+}());
+/**
+ * Implementation of ILogListener which logs to the browser console
+ *
+ */
+var ConsoleListener = /** @class */ (function () {
+    function ConsoleListener() {
+    }
+    /**
+     * Any associated data that a given logging listener may choose to log or ignore
+     *
+     * @param entry The information to be logged
+     */
+    ConsoleListener.prototype.log = function (entry) {
+        var msg = this.format(entry);
+        switch (entry.level) {
+            case LogLevel.Verbose:
+            case LogLevel.Info:
+                console.log(msg);
+                break;
+            case LogLevel.Warning:
+                console.warn(msg);
+                break;
+            case LogLevel.Error:
+                console.error(msg);
+                break;
+        }
+    };
+    /**
+     * Formats the message
+     *
+     * @param entry The information to format into a string
+     */
+    ConsoleListener.prototype.format = function (entry) {
+        var msg = [];
+        msg.push("Message: " + entry.message);
+        if (typeof entry.data !== "undefined") {
+            msg.push(" Data: " + JSON.stringify(entry.data));
+        }
+        return msg.join("");
+    };
+    return ConsoleListener;
+}());
+exports.ConsoleListener = ConsoleListener;
+/**
+ * Implementation of ILogListener which logs to the supplied function
+ *
+ */
+var FunctionListener = /** @class */ (function () {
+    /**
+     * Creates a new instance of the FunctionListener class
+     *
+     * @constructor
+     * @param  method The method to which any logging data will be passed
+     */
+    function FunctionListener(method) {
+        this.method = method;
+    }
+    /**
+     * Any associated data that a given logging listener may choose to log or ignore
+     *
+     * @param entry The information to be logged
+     */
+    FunctionListener.prototype.log = function (entry) {
+        this.method(entry);
+    };
+    return FunctionListener;
+}());
+exports.FunctionListener = FunctionListener;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var util_1 = __webpack_require__(0);
+var logging_1 = __webpack_require__(5);
+var exceptions_1 = __webpack_require__(2);
+var core_1 = __webpack_require__(13);
+function spExtractODataId(candidate) {
+    if (candidate.hasOwnProperty("odata.id")) {
+        return candidate["odata.id"];
+    }
+    else if (candidate.hasOwnProperty("__metadata") && candidate.__metadata.hasOwnProperty("id")) {
+        return candidate.__metadata.id;
+    }
+    else {
+        throw new exceptions_1.ODataIdException(candidate);
+    }
+}
+exports.spExtractODataId = spExtractODataId;
+var SPODataEntityParserImpl = /** @class */ (function (_super) {
+    __extends(SPODataEntityParserImpl, _super);
+    function SPODataEntityParserImpl(factory) {
+        var _this = _super.call(this) || this;
+        _this.factory = factory;
+        _this.hydrate = function (d) {
+            var o = new _this.factory(spGetEntityUrl(d), null);
+            return util_1.Util.extend(o, d);
+        };
+        return _this;
+    }
+    SPODataEntityParserImpl.prototype.parse = function (r) {
+        var _this = this;
+        return _super.prototype.parse.call(this, r).then(function (d) {
+            var o = new _this.factory(spGetEntityUrl(d), null);
+            return util_1.Util.extend(o, d);
+        });
+    };
+    return SPODataEntityParserImpl;
+}(core_1.ODataParserBase));
+var SPODataEntityArrayParserImpl = /** @class */ (function (_super) {
+    __extends(SPODataEntityArrayParserImpl, _super);
+    function SPODataEntityArrayParserImpl(factory) {
+        var _this = _super.call(this) || this;
+        _this.factory = factory;
+        _this.hydrate = function (d) {
+            return d.map(function (v) {
+                var o = new _this.factory(spGetEntityUrl(v), null);
+                return util_1.Util.extend(o, v);
+            });
+        };
+        return _this;
+    }
+    SPODataEntityArrayParserImpl.prototype.parse = function (r) {
+        var _this = this;
+        return _super.prototype.parse.call(this, r).then(function (d) {
+            return d.map(function (v) {
+                var o = new _this.factory(spGetEntityUrl(v), null);
+                return util_1.Util.extend(o, v);
+            });
+        });
+    };
+    return SPODataEntityArrayParserImpl;
+}(core_1.ODataParserBase));
+function spGetEntityUrl(entity) {
+    if (entity.hasOwnProperty("odata.metadata") && entity.hasOwnProperty("odata.editLink")) {
+        // we are dealign with minimal metadata (default)
+        return util_1.Util.combinePaths(util_1.extractWebUrl(entity["odata.metadata"]), "_api", entity["odata.editLink"]);
+    }
+    else if (entity.hasOwnProperty("__metadata")) {
+        // we are dealing with verbose, which has an absolute uri
+        return entity.__metadata.uri;
+    }
+    else {
+        // we are likely dealing with nometadata, so don't error but we won't be able to
+        // chain off these objects
+        logging_1.Logger.write("No uri information found in ODataEntity parsing, chaining will fail for this object.", logging_1.LogLevel.Warning);
+        return "";
+    }
+}
+exports.spGetEntityUrl = spGetEntityUrl;
+function spODataEntity(factory) {
+    return new SPODataEntityParserImpl(factory);
+}
+exports.spODataEntity = spODataEntity;
+function spODataEntityArray(factory) {
+    return new SPODataEntityArrayParserImpl(factory);
+}
+exports.spODataEntityArray = spODataEntityArray;
+
+
+/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1929,7 +1929,7 @@ var exceptions_1 = __webpack_require__(2);
 var webparts_1 = __webpack_require__(34);
 var items_1 = __webpack_require__(15);
 var sharepointqueryableshareable_1 = __webpack_require__(16);
-var odata_1 = __webpack_require__(5);
+var odata_1 = __webpack_require__(6);
 /**
  * Describes a collection of File objects
  *
@@ -2495,7 +2495,7 @@ var util_1 = __webpack_require__(0);
 var lists_2 = __webpack_require__(14);
 var siteusers_1 = __webpack_require__(33);
 var usercustomactions_1 = __webpack_require__(25);
-var odata_1 = __webpack_require__(5);
+var odata_1 = __webpack_require__(6);
 var batch_1 = __webpack_require__(37);
 var features_1 = __webpack_require__(38);
 var sharepointqueryableshareable_1 = __webpack_require__(16);
@@ -3023,8 +3023,8 @@ exports.Web = Web;
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
 var collections_1 = __webpack_require__(8);
-var pnplibconfig_1 = __webpack_require__(3);
-var logging_1 = __webpack_require__(4);
+var pnplibconfig_1 = __webpack_require__(4);
+var logging_1 = __webpack_require__(5);
 /**
  * A wrapper class to provide a consistent interface to browser based storage
  *
@@ -3277,7 +3277,7 @@ exports.PnPClientStorage = PnPClientStorage;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var exceptions_1 = __webpack_require__(2);
-var logging_1 = __webpack_require__(4);
+var logging_1 = __webpack_require__(5);
 var ODataParserBase = /** @class */ (function () {
     function ODataParserBase() {
     }
@@ -3372,7 +3372,7 @@ var sharepointqueryable_1 = __webpack_require__(1);
 var sharepointqueryablesecurable_1 = __webpack_require__(32);
 var util_1 = __webpack_require__(0);
 var usercustomactions_1 = __webpack_require__(25);
-var odata_1 = __webpack_require__(5);
+var odata_1 = __webpack_require__(6);
 var exceptions_1 = __webpack_require__(2);
 var folders_1 = __webpack_require__(18);
 /**
@@ -4229,7 +4229,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
 var webs_1 = __webpack_require__(11);
-var odata_1 = __webpack_require__(5);
+var odata_1 = __webpack_require__(6);
 var sharepointqueryable_1 = __webpack_require__(1);
 var sharepointqueryablesecurable_1 = __webpack_require__(32);
 var types_1 = __webpack_require__(17);
@@ -5239,7 +5239,7 @@ var sharepointqueryable_1 = __webpack_require__(1);
 var sharepointqueryableshareable_1 = __webpack_require__(16);
 var files_1 = __webpack_require__(9);
 var util_1 = __webpack_require__(0);
-var odata_1 = __webpack_require__(5);
+var odata_1 = __webpack_require__(6);
 var items_1 = __webpack_require__(15);
 /**
  * Describes a collection of Folder objects
@@ -5445,7 +5445,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
 var utils_1 = __webpack_require__(10);
 var parsers_1 = __webpack_require__(7);
-var pnplibconfig_1 = __webpack_require__(3);
+var pnplibconfig_1 = __webpack_require__(4);
 var pipeline_1 = __webpack_require__(20);
 var ODataQueryable = /** @class */ (function () {
     function ODataQueryable() {
@@ -5572,7 +5572,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var caching_1 = __webpack_require__(29);
-var logging_1 = __webpack_require__(4);
+var logging_1 = __webpack_require__(5);
 var util_1 = __webpack_require__(0);
 /**
  * Resolves the context's result value
@@ -5798,7 +5798,7 @@ exports.PipelineMethods = PipelineMethods;
 Object.defineProperty(exports, "__esModule", { value: true });
 var digestcache_1 = __webpack_require__(46);
 var util_1 = __webpack_require__(0);
-var pnplibconfig_1 = __webpack_require__(3);
+var pnplibconfig_1 = __webpack_require__(4);
 var exceptions_1 = __webpack_require__(2);
 var utils_1 = __webpack_require__(10);
 var HttpClient = /** @class */ (function () {
@@ -7170,7 +7170,7 @@ exports.SearchBuiltInSourceId = SearchBuiltInSourceId;
 Object.defineProperty(exports, "__esModule", { value: true });
 var storage_1 = __webpack_require__(12);
 var util_1 = __webpack_require__(0);
-var pnplibconfig_1 = __webpack_require__(3);
+var pnplibconfig_1 = __webpack_require__(4);
 var CachingOptions = /** @class */ (function () {
     function CachingOptions(key) {
         this.key = key;
@@ -7316,7 +7316,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var sharepointqueryable_1 = __webpack_require__(1);
 var webs_1 = __webpack_require__(11);
 var usercustomactions_1 = __webpack_require__(25);
-var odata_1 = __webpack_require__(5);
+var odata_1 = __webpack_require__(6);
 var batch_1 = __webpack_require__(37);
 var features_1 = __webpack_require__(38);
 /**
@@ -8387,10 +8387,10 @@ exports.Navigation = Navigation;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
-var logging_1 = __webpack_require__(4);
+var logging_1 = __webpack_require__(5);
 var httpclient_1 = __webpack_require__(21);
 var utils_1 = __webpack_require__(10);
-var pnplibconfig_1 = __webpack_require__(3);
+var pnplibconfig_1 = __webpack_require__(4);
 var exceptions_1 = __webpack_require__(2);
 /**
  * Manages a batch of OData operations
@@ -8762,7 +8762,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var sharepointqueryable_1 = __webpack_require__(1);
 var files_1 = __webpack_require__(9);
-var odata_1 = __webpack_require__(5);
+var odata_1 = __webpack_require__(6);
 var util_1 = __webpack_require__(0);
 /**
  * Represents an app catalog
@@ -8886,7 +8886,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var sharepointqueryable_1 = __webpack_require__(1);
 var util_1 = __webpack_require__(0);
 var files_1 = __webpack_require__(9);
-var odata_1 = __webpack_require__(5);
+var odata_1 = __webpack_require__(6);
 /**
  * Allows for calling of the static SP.Utilities.Utility methods by supplying the method name
  */
@@ -9016,7 +9016,7 @@ exports.UtilityMethod = UtilityMethod;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
-var pnplibconfig_1 = __webpack_require__(3);
+var pnplibconfig_1 = __webpack_require__(4);
 var utils_1 = __webpack_require__(10);
 // import { APIUrlException } from "../utils/exceptions";
 var GraphHttpClient = /** @class */ (function () {
@@ -9184,9 +9184,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
 var storage_1 = __webpack_require__(12);
 var configuration_1 = __webpack_require__(44);
-var logging_1 = __webpack_require__(4);
+var logging_1 = __webpack_require__(5);
 var rest_1 = __webpack_require__(45);
-var pnplibconfig_1 = __webpack_require__(3);
+var pnplibconfig_1 = __webpack_require__(4);
 var rest_2 = __webpack_require__(54);
 /**
  * Root class of the Patterns and Practices namespace, provides an entry point to the library
@@ -9222,11 +9222,11 @@ exports.setup = pnplibconfig_1.setRuntimeConfig;
 /**
  * Export everything back to the top level so it can be properly bundled
  */
-__export(__webpack_require__(63));
-__export(__webpack_require__(66));
-__export(__webpack_require__(68));
-__export(__webpack_require__(71));
+__export(__webpack_require__(64));
+__export(__webpack_require__(67));
+__export(__webpack_require__(69));
 __export(__webpack_require__(72));
+__export(__webpack_require__(73));
 // /**
 //  * Expose a subset of classes from the library for public consumption
 //  */
@@ -9544,7 +9544,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var collections_1 = __webpack_require__(8);
 var util_1 = __webpack_require__(0);
 var parsers_1 = __webpack_require__(7);
-var pnplibconfig_1 = __webpack_require__(3);
+var pnplibconfig_1 = __webpack_require__(4);
 var CachedDigest = /** @class */ (function () {
     function CachedDigest() {
     }
@@ -10649,9 +10649,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var graphqueryable_1 = __webpack_require__(6);
+var graphqueryable_1 = __webpack_require__(3);
 var groups_1 = __webpack_require__(56);
-// import { Me } from "./me";
+var me_1 = __webpack_require__(63);
 /**
  * Root object wrapping v1 functionality for MS Graph
  *
@@ -10671,6 +10671,13 @@ var V1 = /** @class */ (function (_super) {
     Object.defineProperty(V1.prototype, "groups", {
         get: function () {
             return new groups_1.Groups(this);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(V1.prototype, "me", {
+        get: function () {
+            return new me_1.Me(this);
         },
         enumerable: true,
         configurable: true
@@ -10697,7 +10704,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var graphqueryable_1 = __webpack_require__(6);
+var graphqueryable_1 = __webpack_require__(3);
 var members_1 = __webpack_require__(57);
 var util_1 = __webpack_require__(0);
 var calendars_1 = __webpack_require__(58);
@@ -10965,7 +10972,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var graphqueryable_1 = __webpack_require__(6);
+var graphqueryable_1 = __webpack_require__(3);
 var Members = /** @class */ (function (_super) {
     __extends(Members, _super);
     function Members(baseUrl, path) {
@@ -11033,7 +11040,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var graphqueryable_1 = __webpack_require__(6);
+var graphqueryable_1 = __webpack_require__(3);
 // import { Attachments } from "./attachments";
 var Calendars = /** @class */ (function (_super) {
     __extends(Calendars, _super);
@@ -11137,7 +11144,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var graphqueryable_1 = __webpack_require__(6);
+var graphqueryable_1 = __webpack_require__(3);
 var attachments_1 = __webpack_require__(60);
 var Conversations = /** @class */ (function (_super) {
     __extends(Conversations, _super);
@@ -11379,7 +11386,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var graphqueryable_1 = __webpack_require__(6);
+var graphqueryable_1 = __webpack_require__(3);
 var Attachments = /** @class */ (function (_super) {
     __extends(Attachments, _super);
     function Attachments(baseUrl, path) {
@@ -11439,7 +11446,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var graphqueryable_1 = __webpack_require__(6);
+var graphqueryable_1 = __webpack_require__(3);
 var Plans = /** @class */ (function (_super) {
     __extends(Plans, _super);
     function Plans(baseUrl, path) {
@@ -11484,7 +11491,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var graphqueryable_1 = __webpack_require__(6);
+var graphqueryable_1 = __webpack_require__(3);
 var parsers_1 = __webpack_require__(7);
 var Photo = /** @class */ (function (_super) {
     __extends(Photo, _super);
@@ -11525,18 +11532,27 @@ exports.Photo = Photo;
 
 "use strict";
 
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(64));
-var collections_1 = __webpack_require__(8);
-exports.Dictionary = collections_1.Dictionary;
-var util_1 = __webpack_require__(0);
-exports.Util = util_1.Util;
-__export(__webpack_require__(4));
-__export(__webpack_require__(2));
-__export(__webpack_require__(12));
+var graphqueryable_1 = __webpack_require__(3);
+var Me = /** @class */ (function (_super) {
+    __extends(Me, _super);
+    function Me(baseUrl, path) {
+        if (path === void 0) { path = "me"; }
+        return _super.call(this, baseUrl, path) || this;
+    }
+    return Me;
+}(graphqueryable_1.GraphQueryableInstance));
+exports.Me = Me;
 
 
 /***/ }),
@@ -11545,15 +11561,35 @@ __export(__webpack_require__(12));
 
 "use strict";
 
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-var cachingConfigurationProvider_1 = __webpack_require__(42);
-exports.CachingConfigurationProvider = cachingConfigurationProvider_1.default;
-var spListConfigurationProvider_1 = __webpack_require__(65);
-exports.SPListConfigurationProvider = spListConfigurationProvider_1.default;
+__export(__webpack_require__(65));
+var collections_1 = __webpack_require__(8);
+exports.Dictionary = collections_1.Dictionary;
+var util_1 = __webpack_require__(0);
+exports.Util = util_1.Util;
+__export(__webpack_require__(5));
+__export(__webpack_require__(2));
+__export(__webpack_require__(12));
 
 
 /***/ }),
 /* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var cachingConfigurationProvider_1 = __webpack_require__(42);
+exports.CachingConfigurationProvider = cachingConfigurationProvider_1.default;
+var spListConfigurationProvider_1 = __webpack_require__(66);
+exports.SPListConfigurationProvider = spListConfigurationProvider_1.default;
+
+
+/***/ }),
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11633,7 +11669,7 @@ exports.default = SPListConfigurationProvider;
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11642,21 +11678,7 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(67));
-
-
-/***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var graphqueryable_1 = __webpack_require__(6);
-exports.GraphQueryable = graphqueryable_1.GraphQueryable;
-exports.GraphQueryableCollection = graphqueryable_1.GraphQueryableCollection;
-exports.GraphQueryableInstance = graphqueryable_1.GraphQueryableInstance;
-exports.GraphQueryableSearchableCollection = graphqueryable_1.GraphQueryableSearchableCollection;
+__export(__webpack_require__(68));
 
 
 /***/ }),
@@ -11666,11 +11688,25 @@ exports.GraphQueryableSearchableCollection = graphqueryable_1.GraphQueryableSear
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var graphqueryable_1 = __webpack_require__(3);
+exports.GraphQueryable = graphqueryable_1.GraphQueryable;
+exports.GraphQueryableCollection = graphqueryable_1.GraphQueryableCollection;
+exports.GraphQueryableInstance = graphqueryable_1.GraphQueryableInstance;
+exports.GraphQueryableSearchableCollection = graphqueryable_1.GraphQueryableSearchableCollection;
+
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var httpclient_1 = __webpack_require__(21);
 exports.HttpClient = httpclient_1.HttpClient;
-var sprequestexecutorclient_1 = __webpack_require__(69);
+var sprequestexecutorclient_1 = __webpack_require__(70);
 exports.SPRequestExecutorClient = sprequestexecutorclient_1.SPRequestExecutorClient;
-var nodefetchclient_1 = __webpack_require__(70);
+var nodefetchclient_1 = __webpack_require__(71);
 exports.NodeFetchClient = nodefetchclient_1.NodeFetchClient;
 var fetchclient_1 = __webpack_require__(27);
 exports.FetchClient = fetchclient_1.FetchClient;
@@ -11679,7 +11715,7 @@ exports.GraphHttpClient = graphclient_1.GraphHttpClient;
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11770,7 +11806,7 @@ exports.SPRequestExecutorClient = SPRequestExecutorClient;
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11796,7 +11832,7 @@ exports.NodeFetchClient = NodeFetchClient;
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11812,7 +11848,7 @@ __export(__webpack_require__(19));
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11821,11 +11857,11 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__(73));
+__export(__webpack_require__(74));
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11857,7 +11893,7 @@ exports.NavigationNode = navigation_1.NavigationNode;
 var lists_1 = __webpack_require__(14);
 exports.List = lists_1.List;
 exports.Lists = lists_1.Lists;
-var odata_1 = __webpack_require__(5);
+var odata_1 = __webpack_require__(6);
 exports.spExtractODataId = odata_1.spExtractODataId;
 exports.spODataEntity = odata_1.spODataEntity;
 exports.spODataEntityArray = odata_1.spODataEntityArray;
